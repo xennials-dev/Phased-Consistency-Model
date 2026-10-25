@@ -1,0 +1,19 @@
+# Virtual Environment
+.venv/
+venv/
+env/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.pytest_cache/
+
+# Local creations & temporary outputs
+workspace/gradio_creations/*
+!workspace/gradio_creations/.gitkeep
+workspace/gradio_outputs/
+
+# OS files
+.DS_Store
+Thumbs.db

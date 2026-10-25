@@ -1,12 +1,21 @@
+import os
 import gradio as gr
 import torch
 from diffusers import StableDiffusionXLPipeline, StableDiffusionPipeline, LCMScheduler
 from diffusers.schedulers import TCDScheduler
-
-import spaces
 from PIL import Image
 
-SAFETY_CHECKER = True
+try:
+    import spaces
+    gpu_decorator = spaces.GPU(enable_queue=True)
+except ImportError:
+    def gpu_decorator(fn):
+        return fn
+
+DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
+DTYPE = torch.float16 if torch.cuda.is_available() else torch.float32
+
+SAFETY_CHECKER = os.environ.get("SAFETY_CHECKER", "false").lower() in ("true", "1")
 
 checkpoints = {
     "2-Step": ["pcm_{}_smallcfg_2step_converted.safetensors", 2, 0.0],
@@ -23,42 +32,53 @@ checkpoints = {
     ],
 }
 
-
 loaded = None
+pipe_sdxl = None
+pipe_sd15 = None
 
-if torch.cuda.is_available():
-    pipe_sdxl = StableDiffusionXLPipeline.from_pretrained(
-        "stabilityai/stable-diffusion-xl-base-1.0",
-        torch_dtype=torch.float16,
-        variant="fp16",
-    ).to("cuda")
-    pipe_sd15 = StableDiffusionPipeline.from_pretrained(
-        "runwayml/stable-diffusion-v1-5", torch_dtype=torch.float16, variant="fp16"
-    ).to("cuda")
 
-if SAFETY_CHECKER:
-    from safety_checker import StableDiffusionSafetyChecker
-    from transformers import CLIPFeatureExtractor
+def get_pipeline(mode="sdxl"):
+    global pipe_sdxl, pipe_sd15
+    if mode == "sdxl":
+        if pipe_sdxl is None:
+            kwargs = {"torch_dtype": DTYPE}
+            if DEVICE == "cuda":
+                kwargs["variant"] = "fp16"
+            pipe_sdxl = StableDiffusionXLPipeline.from_pretrained(
+                "stabilityai/stable-diffusion-xl-base-1.0", **kwargs
+            ).to(DEVICE)
+        return pipe_sdxl
+    else:
+        if pipe_sd15 is None:
+            kwargs = {"torch_dtype": DTYPE}
+            if DEVICE == "cuda":
+                kwargs["variant"] = "fp16"
+            pipe_sd15 = StableDiffusionPipeline.from_pretrained(
+                "runwayml/stable-diffusion-v1-5", **kwargs
+            ).to(DEVICE)
+        return pipe_sd15
 
-    safety_checker = StableDiffusionSafetyChecker.from_pretrained(
-        "CompVis/stable-diffusion-safety-checker"
-    ).to("cuda")
-    feature_extractor = CLIPFeatureExtractor.from_pretrained(
-        "openai/clip-vit-base-patch32"
-    )
 
-    def check_nsfw_images(
-        images: list[Image.Image],
-    ) -> tuple[list[Image.Image], list[bool]]:
-        safety_checker_input = feature_extractor(images, return_tensors="pt").to("cuda")
-        has_nsfw_concepts = safety_checker(
-            images=[images], clip_input=safety_checker_input.pixel_values.to("cuda")
+def check_nsfw_images(images: list[Image.Image]) -> tuple[list[Image.Image], list[bool]]:
+    try:
+        from safety_checker import StableDiffusionSafetyChecker
+        from transformers import CLIPFeatureExtractor
+        safety_checker = StableDiffusionSafetyChecker.from_pretrained(
+            "CompVis/stable-diffusion-safety-checker"
+        ).to(DEVICE)
+        feature_extractor = CLIPFeatureExtractor.from_pretrained(
+            "openai/clip-vit-base-patch32"
         )
-
+        safety_checker_input = feature_extractor(images, return_tensors="pt").to(DEVICE)
+        has_nsfw_concepts = safety_checker(
+            images=[images], clip_input=safety_checker_input.pixel_values.to(DEVICE)
+        )
         return images, has_nsfw_concepts
+    except Exception:
+        return images, [False] * len(images)
 
 
-@spaces.GPU(enable_queue=True)
+@gpu_decorator
 def generate_image(
     prompt,
     ckpt,
@@ -69,7 +89,7 @@ def generate_image(
     global loaded
     checkpoint = checkpoints[ckpt][0].format(mode)
     guidance_scale = checkpoints[ckpt][2]
-    pipe = pipe_sdxl if mode == "sdxl" else pipe_sd15
+    pipe = get_pipeline(mode)
 
     if loaded != (ckpt + mode):
         pipe.load_lora_weights(

@@ -1,0 +1,9 @@
+# Local cross-platform requirements (CPU & CUDA compatible)
+diffusers==0.28.0
+transformers<4.46.0
+huggingface_hub<0.26.0
+accelerate>=0.30.0
+peft>=0.11.0
+gradio>=4.32.0
+safetensors>=0.4.0
+pillow>=10.0.0
