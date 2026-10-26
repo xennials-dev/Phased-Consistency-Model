@@ -118,6 +118,53 @@ NEGATIVE_PRESETS = {
     "Anime & Digital Art (Clean Masterpiece)": "photorealistic, 3d, realistic, oversaturated, blurry, mutated hands, bad proportions, jpeg artifacts"
 }
 
+# ── Curated 20 Random Diffusion Presets ──
+RANDOM_POSITIVE_PROMPTS = [
+    "Classic vintage glass bottle covered in crisp icy condensation droplets, sitting on a deep dark velvet bar counter with dramatic crimson and ruby reflections, macro commercial product photography, studio rim lighting, shallow depth of field, 8k resolution, photorealistic.",
+    "Futuristic sleek sports car speeding through a midnight dark blue highway with glowing burgundy and crimson neon light trails, cyberpunk aesthetic, volumetric fog, studio cinematic lighting, 8k photorealistic, unreal engine 5 render.",
+    "Luxury burgundy velvet and cut-crystal perfume bottle on dark navy marble pedestal with dramatic rim lighting, macro commercial product photography, studio softbox, 8k resolution, photorealistic.",
+    "Anime heroine in sleek burgundy trench coat looking over midnight neon dark blue cyberpunk city skyline from a skyscraper balcony, Makoto Shinkai aesthetic, glowing city lights, stars, 8k resolution, cinematic digital art.",
+    "Antique brass chronograph pocket watch resting on distressed dark mahogany wood surrounded by amber bokeh and intricate clockwork gears, macro editorial photography, 8k resolution.",
+    "Luminescent deep-sea jellyfish floating through an abyssal midnight dark blue trench, glowing bioluminescent crimson and cyan tentacles, volumetric light rays, National Geographic wildlife photography.",
+    "Steampunk espresso machine crafted from polished copper, aged brass and dark walnut, steam swirling under warm amber filament bulbs, industrial vintage cafe setting, highly detailed 8k.",
+    "Cinematic close-up portrait of a cybernetic operative in matte dark titanium armor with subtle crimson LED ocular accents, rain droplets on visor, moody studio lighting, photorealistic masterwork.",
+    "Sleek aerodynamic concept hypercar parked on wet asphalt in neon-lit neo-Tokyo alley, puddles reflecting glowing burgundy signage and dark indigo shadows, raytracing, 8k.",
+    "Vintage 1958 sunburst acoustic guitar leaning against a dark crushed velvet armchair in a smoky retro jazz club, warm golden spotlight, cinematic film still, Hasselblad 500C.",
+    "Ancient snow-covered pagodas in Himalayan mountain pass at twilight blue hour, warm crimson paper lanterns casting gentle glow onto fresh powder, cinematic landscape photography, 8k.",
+    "Handcrafted cut-ruby crystal decanter filled with vintage aged amber bourbon, heavy crystalline stopper, sitting on obsidian slate with dramatic rim backlighting, commercial advert.",
+    "Sci-fi reconnaissance drone hovering silently above foggy industrial landing pad, pulsing navigation lasers, atmospheric dust motes, blade runner aesthetic, 8k resolution.",
+    "High-speed macro freeze-frame of a milk crown droplet collision against obsidian liquid mirror, razor sharp suspended micro-droplets, pristine studio flash lighting, 1/8000s shutter.",
+    "Vintage Underwood mechanical typewriter with tarnished steel keys and red ribbon, typed parchment paper, dark academia library setting surrounded by leather-bound tomes, 8k.",
+    "Enchanted bioluminescent mushrooms sprouting along mossy tree roots in foggy mystical woods, glowing ethereal turquoise and magenta spores drifting in soft focus, fantasy photography.",
+    "Haute couture editorial model wearing architectural structured burgundy velvet gown with high collar, moody dramatic shadows against minimalist concrete backdrop, Vogue studio portrait, 8k.",
+    "Classic 1950s American diner counter at midnight, chrome barstools, neon jukebox casting deep blue and cherry red reflections across polished laminate, nostalgic Americana.",
+    "Carved obsidian chess king piece standing triumphant on wet checkered marble board, dramatic side lighting casting long shadows, macro game photography, 8k photorealism.",
+    "Vintage NASA astronaut helmet visor reflecting deep crimson emission nebula and distant spiral galaxies in deep outer space, hyper-detailed cosmic reflection, IMAX cinematography."
+]
+
+RANDOM_NEGATIVE_PROMPTS = [
+    "blurry, low quality, distorted, oversaturated, watermark, dry glass, flat lighting, matte surface, cgi, cartoonish",
+    "pixelated, low resolution, artifacts, jpeg compression, duplicate, deformed, text, signature, amateur render",
+    "ugly, bad anatomy, bad hands, missing fingers, extra limbs, mutated, disfigured, poorly drawn face, warped proportions",
+    "washed out, blown out highlights, extreme contrast, noisy grain, dull colors, oversaturated plastic, flat textures",
+    "amateur snapshot, bad framing, cropped, out of frame, tilt, blurry background, motion blur, shutter shake",
+    "dry glass, missing condensation, matte plastic, flat shading, lack of reflections, bad transparency, dull specularity",
+    "cartoon, illustration, 3d render, anime style, claymation, sketch, low poly, videogame graphics, unreal engine draft",
+    "daylight, flat ambient light, harsh shadows, noisy reflections, overexposed, lens flare artifacts, washed out contrast",
+    "extra wheels, distorted chassis, warped proportions, uneven perspective, toy model, plastic finish, toy car",
+    "greyscale, monochromatic, pale, muddy textures, smudged details, bad edges, noisy background, color banding",
+    "distorted text, fake watermark, stock photo logo, border, frame, collage, split screen, low fidelity",
+    "unrealistic materials, fake reflections, CGI skin, porcelain doll face, unnatural gaze, dead eyes, uncanny valley",
+    "bad symmetry, warped geometry, melted edges, broken shapes, chaotic noise, floating artifacts, glitch",
+    "over-processed, unnatural sharpening artifacts, halo effect, color banding, crushed blacks, extreme saturation",
+    "amateur lighting, flashlight look, harsh direct flash, red eye, yellow teeth, greasy skin, harsh highlights",
+    "deformed reflections, missing refractions, incorrect physics, inverted shadows, unnatural water surface",
+    "noisy ISO grain, chromatic aberration, sensor dust spots, camera vignette artifacts, sensor noise, dirty lens",
+    "cluttered background, floating debris, unwanted objects, distracting photobomb, messy composition",
+    "bad depth of field, tilt-shift miniature effect, fake blur, gaussian smudge, lack of macro detail",
+    "low fidelity textures, blurry specular highlights, matte reflections, low dynamic range, plastic shine"
+]
+
 
 # ── Optimization & Recommendation Helpers ──
 def enhance_user_prompt(prompt: str, preset: str) -> str:
@@ -759,15 +806,9 @@ def build_app():
                         )
 
                         with gr.Row():
-                            enhance_btn = gr.Button("✨ Auto-Enhance Prompt (Macro Photographic Details & Lighting)", elem_classes=["action-btn-secondary"])
-                            reset_prompt_btn = gr.Button("↺ Reset Prompt", size="sm")
-
-                        with gr.Row():
-                            neg_preset = gr.Dropdown(
-                                label="Negative Filter Preset",
-                                choices=list(NEGATIVE_PRESETS.keys()),
-                                value="Glass, Reflections & Macro (Anti-Muddiness)"
-                            )
+                            enhance_btn = gr.Button("✨ Auto-Enhance", elem_classes=["action-btn-secondary"], scale=2)
+                            random_prompt_btn = gr.Button("🎲 Random Prompt (20 Presets)", elem_classes=["action-btn-secondary"], scale=2)
+                            reset_prompt_btn = gr.Button("↺ Reset Prompts", size="sm", scale=1)
 
                         negative_prompt = gr.Textbox(
                             label="Negative Prompt (PCM Enhanced Sensitivity)",
@@ -775,6 +816,15 @@ def build_app():
                             lines=2,
                             value="blurry, low quality, distorted, oversaturated, watermark, dry glass, flat lighting, matte surface, cgi, cartoonish"
                         )
+
+                        with gr.Row():
+                            neg_preset = gr.Dropdown(
+                                label="Negative Filter Preset",
+                                choices=list(NEGATIVE_PRESETS.keys()),
+                                value="Glass, Reflections & Macro (Anti-Muddiness)",
+                                scale=3
+                            )
+                            random_neg_btn = gr.Button("🎲 Random Negative (20 Presets)", elem_classes=["action-btn-secondary"], scale=2)
 
                         with gr.Row():
                             style_preset = gr.Dropdown(
@@ -1055,9 +1105,20 @@ def build_app():
             outputs=[prompt_input]
         )
 
+        # Random & Reset Prompt Generators (Curated 20 Diffusion Presets)
         reset_prompt_btn.click(
-            fn=lambda: "Classic vintage glass bottle covered in crisp icy condensation droplets, sitting on a deep dark velvet bar counter with dramatic crimson and ruby reflections, macro commercial product photography, studio rim lighting, shallow depth of field, 8k resolution, photorealistic.",
+            fn=lambda: (random.choice(RANDOM_POSITIVE_PROMPTS), random.choice(RANDOM_NEGATIVE_PROMPTS)),
+            outputs=[prompt_input, negative_prompt]
+        )
+
+        random_prompt_btn.click(
+            fn=lambda: random.choice(RANDOM_POSITIVE_PROMPTS),
             outputs=[prompt_input]
+        )
+
+        random_neg_btn.click(
+            fn=lambda: random.choice(RANDOM_NEGATIVE_PROMPTS),
+            outputs=[negative_prompt]
         )
 
         roll_seed_btn.click(
