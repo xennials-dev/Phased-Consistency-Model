@@ -595,21 +595,147 @@ def pcm_generate(
 CUSTOM_CSS = """
 @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Alex+Brush&family=Outfit:wght@300;400;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
 
-:root {
+:root, :root.dark, body, body.dark, .gradio-container {
   --pcm-burgundy-deep: #4A0516;
   --pcm-burgundy-mid: #6E0D25;
   --pcm-burgundy-bright: #9E1B38;
   --pcm-burgundy-glow: #B8253E;
   --pcm-darkblue-bg: #070B19;
   --pcm-darkblue-panel: #0D1630;
+  --pcm-darkblue-card: #111A38;
   --pcm-darkblue-border: #1E294B;
   --pcm-text-white: #FFFFFF;
+  --pcm-text-subdued: #94A3B8;
+
+  /* Gradio Native Theme Variable Overrides */
+  --body-background-fill: #070B19 !important;
+  --body-text-color: #FFFFFF !important;
+  --body-text-color-subdued: #94A3B8 !important;
+  --background-fill-primary: #0D1630 !important;
+  --background-fill-secondary: #070B19 !important;
+  --block-background-fill: #0D1630 !important;
+  --block-border-color: #1E294B !important;
+  --block-border-width: 1px !important;
+  --block-label-background-fill: #0D1630 !important;
+  --block-label-text-color: #FFFFFF !important;
+  --block-title-text-color: #FFFFFF !important;
+  --block-shadow: none !important;
+  --input-background-fill: #070B19 !important;
+  --input-border-color: #2A3B66 !important;
+  --input-text-color: #FFFFFF !important;
+  --input-placeholder-color: #8899AC !important;
+  --input-shadow: none !important;
+  --button-secondary-background-fill: #111A38 !important;
+  --button-secondary-background-fill-hover: #6E0D25 !important;
+  --button-secondary-text-color: #FFFFFF !important;
+  --button-secondary-border-color: #1E294B !important;
+  --border-color-primary: #1E294B !important;
+  --border-color-accent: #B8253E !important;
+  --panel-background-fill: #0D1630 !important;
+  --panel-border-color: #1E294B !important;
+  --checkbox-background-color: #070B19 !important;
+  --checkbox-background-color-selected: #9E1B38 !important;
+  --checkbox-label-background-fill: #0D1630 !important;
+  --color-accent-soft: rgba(184, 37, 62, 0.25) !important;
 }
 
-body, .gradio-container {
+html, body, .gradio-container {
   background-color: var(--pcm-darkblue-bg) !important;
   color: var(--pcm-text-white) !important;
   font-family: 'Outfit', sans-serif !important;
+}
+
+/* Force dark blue on all blocks, containers, forms, boxes, wrappers, cards */
+.block, 
+div[data-testid="block"], 
+div[class*="block"], 
+.gr-block, 
+.gr-box, 
+.gr-form, 
+.gr-panel,
+.form, 
+.wrap, 
+fieldset,
+.padded,
+div[class*="wrap-"], 
+div[class*="container-"],
+div[class*="card"] {
+  background-color: #0D1630 !important;
+  background: #0D1630 !important;
+  border-color: #1E294B !important;
+  color: #FFFFFF !important;
+}
+
+/* Image wrappers, empty placeholders, preview frames */
+.empty,
+div[class*="empty"],
+div[data-testid="image"],
+div[class*="image-frame"],
+div[class*="image-container"],
+.upload-container,
+.gallery,
+div[class*="gallery"],
+div[data-testid="gallery"],
+.thumbnail-item,
+div[class*="thumbnail-"] {
+  background-color: #070B19 !important;
+  background: #070B19 !important;
+  border: 1px solid #1E294B !important;
+  color: #FFFFFF !important;
+}
+
+div.empty svg,
+.image-container svg {
+  fill: #64748B !important;
+  stroke: #64748B !important;
+}
+
+/* Dropdown containers, choices, menus */
+.dropdown,
+select,
+.wrap-inner,
+ul.options,
+li.item,
+div[class*="dropdown-"],
+div[data-testid="dropdown"],
+div[class*="select-"] {
+  background-color: #070B19 !important;
+  background: #070B19 !important;
+  color: #FFFFFF !important;
+  border-color: #2A3B66 !important;
+}
+
+ul.options li:hover,
+li.item:hover,
+.item.selected {
+  background-color: #1E294B !important;
+  color: #FFFFFF !important;
+}
+
+/* All secondary buttons (including reset & shuffle) */
+button:not(.primary):not(.generate-btn),
+button.secondary,
+button[class*="secondary"],
+.action-btn-secondary {
+  background: linear-gradient(135deg, #1E294B 0%, #0D1630 100%) !important;
+  color: #FFFFFF !important;
+  border: 1px solid #B8253E !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  font-size: 13px !important;
+  padding: 8px 16px !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+button:not(.primary):not(.generate-btn):hover,
+button.secondary:hover,
+button[class*="secondary"]:hover,
+.action-btn-secondary:hover {
+  background: linear-gradient(135deg, #6E0D25 0%, #1E294B 100%) !important;
+  border-color: #B8253E !important;
+  box-shadow: 0 0 12px rgba(184, 37, 62, 0.5) !important;
+  color: #FFFFFF !important;
 }
 
 .coca-cola-brand-container {
@@ -664,14 +790,7 @@ body, .gradio-container {
   margin-top: 10px;
 }
 
-.gr-panel, .gr-box, .gr-form, .gr-accordion, .tabitem {
-  background-color: var(--pcm-darkblue-panel) !important;
-  border: 1px solid var(--pcm-darkblue-border) !important;
-  border-radius: 14px !important;
-  color: var(--pcm-text-white) !important;
-}
-
-textarea, input[type="text"], input[type="number"], input[type="password"], select {
+textarea, input[type="text"], input[type="number"], input[type="password"] {
   background-color: #070B19 !important;
   color: #FFFFFF !important;
   border: 1px solid #2A3B66 !important;
@@ -704,23 +823,6 @@ textarea:focus, input[type="text"]:focus, select:focus, input[type="password"]:f
   transform: translateY(-2px) !important;
   box-shadow: 0 10px 25px rgba(184, 37, 62, 0.8) !important;
   background: linear-gradient(135deg, var(--pcm-burgundy-glow) 0%, var(--pcm-burgundy-mid) 100%) !important;
-}
-
-.action-btn-secondary {
-  background: linear-gradient(135deg, #1E294B 0%, #0D1630 100%) !important;
-  color: #FFFFFF !important;
-  border: 1px solid #B8253E !important;
-  border-radius: 8px !important;
-  font-weight: 600 !important;
-  font-size: 13px !important;
-  padding: 8px 16px !important;
-  cursor: pointer !important;
-  transition: all 0.2s ease !important;
-}
-
-.action-btn-secondary:hover {
-  background: linear-gradient(135deg, #6E0D25 0%, #1E294B 100%) !important;
-  box-shadow: 0 0 12px rgba(184, 37, 62, 0.5) !important;
 }
 
 .sampler-status-card {
@@ -757,25 +859,87 @@ input[type="range"] {
   accent-color: var(--pcm-burgundy-glow) !important;
 }
 
+input[type="checkbox"] {
+  accent-color: var(--pcm-burgundy-glow) !important;
+}
+
+.tab-nav, .tabs, div[role="tablist"] {
+  background-color: #070B19 !important;
+  border-bottom: 2px solid #1E294B !important;
+}
+
+.tab-nav button {
+  color: #94A3B8 !important;
+}
+
 .tab-nav button.selected {
   border-bottom: 3px solid var(--pcm-burgundy-glow) !important;
   color: #FFFFFF !important;
   font-weight: 700 !important;
   background: rgba(110, 13, 37, 0.3) !important;
 }
+
+.accordion, details, summary {
+  background-color: #0D1630 !important;
+  color: #FFFFFF !important;
+  border-color: #1E294B !important;
+}
 """
 
 
 def build_app():
     """Constructs the comprehensive, optimized Gradio Blocks Studio UI."""
+    custom_theme = gr.themes.Base(
+        primary_hue=gr.themes.colors.rose,
+        secondary_hue=gr.themes.colors.slate,
+        neutral_hue=gr.themes.colors.slate
+    ).set(
+        body_background_fill="#070B19",
+        body_background_fill_dark="#070B19",
+        background_fill_primary="#0D1630",
+        background_fill_primary_dark="#0D1630",
+        background_fill_secondary="#070B19",
+        background_fill_secondary_dark="#070B19",
+        block_background_fill="#0D1630",
+        block_background_fill_dark="#0D1630",
+        block_label_background_fill="#0D1630",
+        block_label_background_fill_dark="#0D1630",
+        block_title_background_fill="#0D1630",
+        block_title_background_fill_dark="#0D1630",
+        input_background_fill="#070B19",
+        input_background_fill_dark="#070B19",
+        button_secondary_background_fill="#111A38",
+        button_secondary_background_fill_dark="#111A38",
+        button_secondary_background_fill_hover="#6E0D25",
+        button_secondary_background_fill_hover_dark="#6E0D25",
+        button_secondary_text_color="#FFFFFF",
+        button_secondary_text_color_dark="#FFFFFF",
+        panel_background_fill="#0D1630",
+        panel_background_fill_dark="#0D1630",
+        border_color_primary="#1E294B",
+        border_color_primary_dark="#1E294B",
+        checkbox_background_color="#070B19",
+        checkbox_background_color_dark="#070B19",
+        checkbox_label_background_fill="#0D1630",
+        checkbox_label_background_fill_dark="#0D1630",
+    )
+
     with gr.Blocks(
         title="Phased Consistency Model (PCM) Studio",
         css=CUSTOM_CSS,
-        theme=gr.themes.Base(
-            primary_hue=gr.themes.colors.rose,
-            secondary_hue=gr.themes.colors.slate,
-            neutral_hue=gr.themes.colors.slate
-        )
+        theme=custom_theme,
+        js="() => { document.documentElement.classList.add('dark'); document.body.classList.add('dark'); }",
+        head="""
+        <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.documentElement.classList.add("dark");
+            document.body.classList.add("dark");
+        });
+        if (document.documentElement) {
+            document.documentElement.classList.add("dark");
+        }
+        </script>
+        """
     ) as app:
 
         # ── Header with Coca-Cola Spencerian Script Branding ──
@@ -808,7 +972,7 @@ def build_app():
                         with gr.Row():
                             enhance_btn = gr.Button("✨ Auto-Enhance", elem_classes=["action-btn-secondary"], scale=2)
                             random_prompt_btn = gr.Button("🎲 Random Prompt (20 Presets)", elem_classes=["action-btn-secondary"], scale=2)
-                            reset_prompt_btn = gr.Button("↺ Reset Prompts", size="sm", scale=1)
+                            reset_prompt_btn = gr.Button("↺ Reset Prompts", elem_classes=["action-btn-secondary"], size="sm", scale=1)
 
                         negative_prompt = gr.Textbox(
                             label="Negative Prompt (PCM Enhanced Sensitivity)",
@@ -871,7 +1035,7 @@ def build_app():
                                 )
                                 with gr.Column(scale=1):
                                     randomize_seed = gr.Checkbox(label="Randomize Seed", value=True)
-                                    roll_seed_btn = gr.Button("🎲 Shuffle", size="sm")
+                                    roll_seed_btn = gr.Button("🎲 Shuffle", elem_classes=["action-btn-secondary"], size="sm")
 
                             sampler_status = gr.Markdown(
                                 "💎 **PCM 8-Step (High Quality)**: Recommended for intricate glass condensation, ruby refractions, and deep velvet textures! Best with **CFG 1.0 - 2.5**.",
